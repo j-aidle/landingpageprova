@@ -1,5 +1,5 @@
 {
-  "name": "landing-page-prova",
+  "name": "landingpageprova",
   "version": "0.0.0",
   "private": true,
   "type": "module",
@@ -9,13 +9,10 @@
     "preview": "vite preview"
   },
   "devDependencies": {
-    "autoprefixer": "^10.6.1",
-    "postcss": "^8.5.28",
-    "tailwindcss": "^4.3.3",
     "vite": "^8.3.0"
   },
   "dependencies": {
-    "@tailwindcss/postcss": "^4.3.3",
-    "@tailwindcss/vite": "^4.3.3"
+    "@tailwindcss/vite": "^4.3.3",
+    "tailwindcss": "^4.3.3"
   }
 }
