@@ -1,8 +1,12 @@
 import './style.css';
+import Alpine from 'alpinejs';
 import { renderNavbar } from './components/Navbar.js';
 import { renderHero } from './components/Hero.js';
 import { renderFeatures } from './components/Features.js';
 import { renderFooter } from './components/Footer.js';
+
+// Configurar i iniciar Alpine.js
+window.Alpine = Alpine;
 
 // Estructura principal de la Landing Page
 document.querySelector('#app').innerHTML = `
@@ -21,3 +25,6 @@ renderNavbar(document.querySelector('#navbar'));
 renderHero(document.querySelector('#hero'));
 renderFeatures(document.querySelector('#features'));
 renderFooter(document.querySelector('#footer'));
+
+// Arrencar Alpine després d'haver injectat tots els components al DOM
+Alpine.start();

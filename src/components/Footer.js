@@ -8,7 +8,7 @@ export function renderFooter(element) {
         </div>
         
         <p class="text-xs text-slate-500">
-          © ${new Date().getFullYear()} Landing Page. Construït amb Vite, Vanilla JS i Tailwind CSS v4.
+          © ${new Date().getFullYear()} Landing Page. Construït amb Vite, Vanilla JS, Alpine.js i Tailwind CSS v4.
         </p>
 
         <div class="flex gap-6 text-sm text-slate-400">

@@ -6,14 +6,14 @@ export function renderFeatures(element) {
       icon: '⚡'
     },
     {
+      title: 'Reactivitat lleugera',
+      desc: 'Utilitza Alpine.js per gestionar l\'estat i la interactivitat directament en l\'HTML sense virtual DOM.',
+      icon: '🚀'
+    },
+    {
       title: 'Modularitat Total',
       desc: 'Organitza el teu codi Vanilla JavaScript en components independents fàcils de mantenir.',
       icon: '🧩'
-    },
-    {
-      title: 'Estils Moderns',
-      desc: 'Dissenyat amb utilitats CSS de darrera generació, gradients i efectes de vidre de forma senzilla.',
-      icon: '🎨'
     }
   ];
 

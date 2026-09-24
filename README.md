@@ -1,6 +1,6 @@
-# Landing Page Modular amb Vite, Vanilla JavaScript i Tailwind CSS v4
+# Landing Page Modular amb Vite, Vanilla JavaScript, Alpine.js i Tailwind CSS v4
 
-Aquest projecte és una plantilla i guia pas a pas per a crear aplicacions web modernes, ràpides i modulars utilitzant **Vanilla JavaScript**, **Vite** i **Tailwind CSS v4** sense la necessitat de cap framework pesat (com React o Vue).
+Aquest projecte és una plantilla i guia pas a pas per a crear aplicacions web modernes, ràpides i modulars utilitzant **Vanilla JavaScript**, **Alpine.js**, **Vite** i **Tailwind CSS v4** sense la necessitat de cap framework pesat (com React o Vue).
 
 ---
 
@@ -36,11 +36,11 @@ landingpageprova/
 │   └── vite.svg
 ├── src/
 │   ├── components/
-│   │   ├── Navbar.js       # Component de la barra de navegació
-│   │   ├── Hero.js         # Component de la secció principal (Hero)
+│   │   ├── Navbar.js       # Component de la barra de navegació (amb Alpine.js)
+│   │   ├── Hero.js         # Component de la secció principal (Hero amb Alpine.js)
 │   │   ├── Features.js     # Component de la grella de característiques
 │   │   └── Footer.js       # Component del peu de pàgina
-│   ├── main.js             # Punt d'entrada principal de JavaScript
+│   ├── main.js             # Punt d'entrada de JS i inicialització d'Alpine.js
 │   └── style.css            # Directiva d'importació de Tailwind v4
 ├── .gitignore
 ├── index.html              # Estructura HTML base
@@ -56,15 +56,15 @@ landingpageprova/
 ### Pas 1: Crear el projecte base amb Vite
 Obre la terminal i executa:
 ```bash
-npm create vite@latest landingpageprova -- --template vanilla
-cd landingpageprova
+npm create vite@latest mi-proyecto -- --template vanilla
+cd mi-proyecto
 ```
 
-### Pas 2: Instal·lar Tailwind CSS v4 i dependències
-Instal·la les dependències del projecte juntament amb el paquet oficial de Tailwind CSS v4 per a Vite:
+### Pas 2: Instal·lar Tailwind CSS v4, Alpine.js i dependències
+Instal·la les dependències del projecte juntament amb Tailwind CSS v4 i Alpine.js:
 ```bash
 npm install
-npm install tailwindcss @tailwindcss/vite
+npm install tailwindcss @tailwindcss/vite alpinejs
 ```
 
 ---
@@ -101,7 +101,7 @@ Assegura't que l'script apunti a `/src/main.js` per evitar errors de resolució 
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Landing Page - Vite + Vanilla JS + Tailwind v4</title>
+    <title>Landing Page - Vite + Vanilla JS + Alpine.js + Tailwind v4</title>
   </head>
   <body class="bg-slate-900 text-slate-100 min-h-screen">
     <div id="app"></div>
@@ -114,16 +114,22 @@ Assegura't que l'script apunti a `/src/main.js` per evitar errors de resolució 
 
 ## 🧩 Arquitectura i Codi dels Components
 
-L'aplicació utilitza un patró modular basat en funcions. Cada component exporta una funció que rep un element contenidor del DOM i n'injecta l'HTML i els esdeveniments necessaris.
+L'aplicació utilitza un patró modular basat en funcions combinat amb la reactivitat declarativa d'**Alpine.js**.
 
 ### 1. Fitxer Principal (`src/main.js`)
 
+Aquí inicialitzem **Alpine.js** de forma global i renderitzem l'estructura de la pàgina:
+
 ```javascript
 import './style.css';
+import Alpine from 'alpinejs';
 import { renderNavbar } from './components/Navbar.js';
 import { renderHero } from './components/Hero.js';
 import { renderFeatures } from './components/Features.js';
 import { renderFooter } from './components/Footer.js';
+
+// Configurar i iniciar Alpine.js
+window.Alpine = Alpine;
 
 // Estructura principal de la Landing Page
 document.querySelector('#app').innerHTML = `
@@ -142,14 +148,19 @@ renderNavbar(document.querySelector('#navbar'));
 renderHero(document.querySelector('#hero'));
 renderFeatures(document.querySelector('#features'));
 renderFooter(document.querySelector('#footer'));
+
+// Arrencar Alpine després d'haver injectat tots els components al DOM
+Alpine.start();
 ```
 
 ### 2. Component Navbar (`src/components/Navbar.js`)
 
+Utilitza les directives `x-data`, `@click` i `x-show` d'Alpine.js per gestionar un menú desplegable responsive sense necessitat de manipular el DOM manualment:
+
 ```javascript
 export function renderNavbar(element) {
   element.innerHTML = `
-    <nav class="border-b border-slate-800 bg-slate-900/80 backdrop-blur-md sticky top-0 z-50">
+    <nav x-data="{ open: false }" class="border-b border-slate-800 bg-slate-900/80 backdrop-blur-md sticky top-0 z-50">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
         <div class="flex items-center gap-2">
           <div class="h-8 w-8 rounded-lg bg-indigo-600 flex items-center justify-center font-bold text-white shadow-lg shadow-indigo-600/30">
@@ -158,17 +169,39 @@ export function renderNavbar(element) {
           <span class="font-bold text-lg tracking-tight text-white">ViteApp</span>
         </div>
         
+        <!-- Menú d'escriptori -->
         <div class="hidden md:flex items-center gap-8 text-sm font-medium text-slate-300">
           <a href="#features" class="hover:text-indigo-400 transition-colors">Característiques</a>
           <a href="#" class="hover:text-indigo-400 transition-colors">Solucions</a>
           <a href="#" class="hover:text-indigo-400 transition-colors">Preus</a>
         </div>
 
-        <div class="flex items-center gap-4">
-          <a href="#" class="text-sm font-medium text-slate-300 hover:text-white transition-colors hidden sm:block">Inicia sessió</a>
+        <div class="hidden md:flex items-center gap-4">
+          <a href="#" class="text-sm font-medium text-slate-300 hover:text-white transition-colors">Inicia sessió</a>
           <a href="#" class="text-sm font-medium bg-indigo-600 hover:bg-indigo-500 text-white px-4 py-2 rounded-lg transition-all shadow-md shadow-indigo-600/20">
             Començar
           </a>
+        </div>
+
+        <!-- Botó del menú mòbil -->
+        <div class="flex md:hidden">
+          <button @click="open = !open" type="button" class="text-slate-300 hover:text-white focus:outline-none p-2">
+            <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path x-show="!open" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+              <path x-show="open" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- Desplegable del menú mòbil controlat per Alpine -->
+      <div x-show="open" x-transition class="md:hidden border-b border-slate-800 bg-slate-900 px-4 pt-2 pb-4 space-y-2">
+        <a href="#features" class="block px-3 py-2 rounded-md text-base font-medium text-slate-300 hover:text-white hover:bg-slate-800">Característiques</a>
+        <a href="#" class="block px-3 py-2 rounded-md text-base font-medium text-slate-300 hover:text-white hover:bg-slate-800">Solucions</a>
+        <a href="#" class="block px-3 py-2 rounded-md text-base font-medium text-slate-300 hover:text-white hover:bg-slate-800">Preus</a>
+        <div class="pt-4 border-t border-slate-800 flex flex-col gap-2">
+          <a href="#" class="block px-3 py-2 rounded-md text-base font-medium text-slate-300 text-center">Inicia sessió</a>
+          <a href="#" class="block px-3 py-2 rounded-md text-base font-medium bg-indigo-600 text-white text-center">Començar</a>
         </div>
       </div>
     </nav>
@@ -177,6 +210,8 @@ export function renderNavbar(element) {
 ```
 
 ### 3. Component Hero (`src/components/Hero.js`)
+
+Aprofita Alpine `@click` per gestionar la interactivitat directament a l'HTML:
 
 ```javascript
 export function renderHero(element) {
@@ -187,7 +222,7 @@ export function renderHero(element) {
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
         <span class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 mb-8">
           <span class="w-2 h-2 rounded-full bg-indigo-400 animate-pulse"></span>
-          Nova versió 4.0 disponible
+          Nova versió 4.0 + Alpine.js disponible
         </span>
 
         <h1 class="text-4xl sm:text-6xl font-extrabold text-white tracking-tight max-w-4xl mx-auto leading-tight">
@@ -195,11 +230,11 @@ export function renderHero(element) {
         </h1>
 
         <p class="mt-6 text-lg sm:text-xl text-slate-400 max-w-2xl mx-auto leading-relaxed">
-          Projecte modular basat en Vanilla JS i Vite. Sense configuracions complexes, directament preparat per a la producció.
+          Projecte modular basat en Vanilla JS, Alpine.js i Vite. Sense configuracions complexes, directament preparat per a la producció.
         </p>
 
         <div class="mt-10 flex flex-col sm:flex-row gap-4 justify-center items-center">
-          <button id="cta-btn" class="w-full sm:w-auto px-8 py-3.5 bg-indigo-600 hover:bg-indigo-500 text-white font-semibold rounded-xl shadow-lg shadow-indigo-600/30 transition-all cursor-pointer">
+          <button @click="alert('¡Gràcies per provar la landing page amb Alpine.js!')" class="w-full sm:w-auto px-8 py-3.5 bg-indigo-600 hover:bg-indigo-500 text-white font-semibold rounded-xl shadow-lg shadow-indigo-600/30 transition-all cursor-pointer">
             Explorar demo
           </button>
           <a href="#features" class="w-full sm:w-auto px-8 py-3.5 bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 font-semibold rounded-xl transition-all text-center">
@@ -209,11 +244,6 @@ export function renderHero(element) {
       </div>
     </section>
   `;
-
-  // Esdeveniment interactiu del botó CTA
-  element.querySelector('#cta-btn')?.addEventListener('click', () => {
-    alert('¡Gràcies per provar la landing page!');
-  });
 }
 ```
 
@@ -228,14 +258,14 @@ export function renderFeatures(element) {
       icon: '⚡'
     },
     {
+      title: 'Reactivitat lleugera',
+      desc: 'Utilitza Alpine.js per gestionar l'estat i la interactivitat directament en l'HTML sense virtual DOM.',
+      icon: '🚀'
+    },
+    {
       title: 'Modularitat Total',
       desc: 'Organitza el teu codi Vanilla JavaScript en components independents fàcils de mantenir.',
       icon: '🧩'
-    },
-    {
-      title: 'Estils Moderns',
-      desc: 'Dissenyat amb utilitats CSS de darrera generació, gradients i efectes de vidre de forma senzilla.',
-      icon: '🎨'
     }
   ];
 
@@ -275,7 +305,7 @@ export function renderFooter(element) {
         </div>
         
         <p class="text-xs text-slate-500">
-          © ${new Date().getFullYear()} Landing Page. Construït amb Vite, Vanilla JS i Tailwind CSS v4.
+          © ${new Date().getFullYear()} Landing Page. Construït amb Vite, Vanilla JS, Alpine.js i Tailwind CSS v4.
         </p>
 
         <div class="flex gap-6 text-sm text-slate-400">
@@ -292,14 +322,25 @@ export function renderFooter(element) {
 
 ## 🚨 Resolució d'Errors Comuns
 
-### 1. `[plugin:@tailwindcss/vite] Missing opening {`
-- **Causa**: Falta el punt i coma `;` al final de la línia `@import "tailwindcss"` a `src/style.css`, o bé hi ha regles CSS mal formades.
+### 1. Alpine no executa els esdeveniments o directiva `x-data`
+- **Causa**: `Alpine.start()` s'ha cridat abans que els components s'injectessin al DOM amb `innerHTML`.
+- **Solució**: Crida sempre `Alpine.start()` al fitxer `src/main.js` **després** de renderitzar tots els components:
+  ```javascript
+  // Renderitzar HTML dels components primer
+  renderNavbar(...);
+  
+  // Iniciar Alpine al final de tot
+  Alpine.start();
+  ```
+
+### 2. `[plugin:@tailwindcss/vite] Missing opening {`
+- **Causa**: Falta el punt i coma `;` al final de la línia `@import "tailwindcss"` a `src/style.css`.
 - **Solució**: Deixa el fitxer `src/style.css` únicament amb:
   ```css
   @import "tailwindcss";
   ```
 
-### 2. `Failed to load url /main.js (resolved id: /main.js). Does the file exist?`
+### 3. `Failed to load url /main.js (resolved id: /main.js). Does the file exist?`
 - **Causa**: `index.html` està buscant `main.js` a l'arrel en lloc de la carpeta `src/`.
 - **Solució**: Modifica la ruta a `index.html` per a carregar `/src/main.js`:
   ```html
@@ -318,4 +359,4 @@ export function renderFooter(element) {
 
 ---
 
-Elaborat amb Vanilla JS, Vite i Tailwind CSS v4.
+Elaborat amb Vanilla JS, Alpine.js, Vite i Tailwind CSS v4.
